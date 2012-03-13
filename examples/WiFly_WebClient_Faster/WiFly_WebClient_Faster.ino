@@ -11,7 +11,7 @@ byte server[] = { 66, 249, 89, 104 }; // Google
 
 //Client client(server, 80);
 
-WiFlyClient client("google.com", 80);
+WiFlyClient client;
 
 void setup() {
   
@@ -31,7 +31,7 @@ void setup() {
 
   Serial.println("connecting...");
 
-  if (client.connect()) {
+  if (client.connect("google.com", 80)) {
     Serial.println("connected");
     client.println("GET /search?q=arduino HTTP/1.0");
     client.println();

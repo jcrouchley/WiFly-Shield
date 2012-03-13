@@ -24,7 +24,7 @@ SoftwareSerial mySerial(2, 3);
 #include "Credentials.h"
 
 // Using Pachube API V2
-WiFlyClient client("api.pachube.com", 80);
+WiFlyClient client;
 
 void setup() {
   
@@ -69,7 +69,7 @@ void loop() {
     // feedID can be the datastream name of the numberic ID
     sprintf(buff,"0,%d\n1,%d",i++,analogRead(0));
     Serial.println("connecting...");
-    if (client.connect()) {
+    if (client.connect("api.pachube.com", 80)) {
       Serial.println("connected");
       client.print("PUT /v2/feeds/");  // APIV2
       client.print(PACHUBEFEED);

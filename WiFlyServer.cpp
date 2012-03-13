@@ -1,11 +1,7 @@
 #include "WiFly.h"
 
-// NOTE: Arbitrary cast to avoid constructor ambiguity.
-// TODO: Handle this a different way so we're not using
-//       NULL pointers all over the place?
-#define NO_CLIENT WiFlyClient ((uint8_t*) NULL, 0)
 
-WiFlyServer::WiFlyServer(uint16_t port) : activeClient(NO_CLIENT){
+WiFlyServer::WiFlyServer(uint16_t port) : activeClient(){
   /*
    */
   _port = port;
@@ -50,7 +46,7 @@ WiFlyClient& WiFlyServer::available() {
 	activeClient._domain = NULL;
 	activeClient._ip = NULL;
 
-	activeClient.connect();
+	activeClient._connect();
 	WiFly.serverConnectionActive = true;
       } else {
 	// Ignore other feedback from the WiFly module.

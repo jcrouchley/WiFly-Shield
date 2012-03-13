@@ -4,33 +4,30 @@
 #ifndef __WIFLY_CLIENT_H__
 #define __WIFLY_CLIENT_H__
 
-#include "Stream.h"
+#include "Client.h"
+#include "IPAddress.h"
 
 #include "ParsedStream.h"
 
 #include "WiFlyDevice.h"
 
-class WiFlyClient : public Stream {
+class WiFlyClient : public Client {
  public:
-  WiFlyClient(uint8_t *ip, uint16_t port);
-  WiFlyClient(const char* domain, uint16_t port);
+  WiFlyClient();
 
-  boolean connect();
 
-  size_t write(byte value);
-  size_t write(const char *str);
-  size_t write(const uint8_t *buffer, size_t size);
-
-  int available();
-  int read();
-  void flush(void);
-  int peek();
-
-  bool connected();
-  void stop();
-
-  operator bool();
-
+  virtual int connect(IPAddress ip, uint16_t port);
+  virtual int connect(const char *host, uint16_t port);
+  virtual size_t write(uint8_t);
+  virtual size_t write(const uint8_t *buf, size_t size);
+  virtual int available();
+  virtual int read();
+  virtual int read(uint8_t *buf, size_t size);
+  virtual int peek(); 
+  virtual void flush();
+  virtual void stop();
+  virtual uint8_t connected();
+  virtual operator bool();
 
   uint8_t *_ip;
   uint16_t _port;
@@ -38,7 +35,7 @@ class WiFlyClient : public Stream {
   const char *_domain;
 private:
   WiFlyDevice& _WiFly;
-
+  boolean _connect();
 
   bool isOpen;
 
@@ -47,7 +44,7 @@ private:
 
   // TODO: Work out why alternate instantiation code in
   //       Server.available() doesn't work and thus requires this:
-  friend class Server;
+  friend class WiFlyServer;
 };
 
 #endif

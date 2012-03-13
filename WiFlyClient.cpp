@@ -2,42 +2,14 @@
 #include "WiFly.h"
 #include "WiFlyClient.h"
 
-WiFlyClient::WiFlyClient(uint8_t *ip, uint16_t port) :
+WiFlyClient::WiFlyClient() :
   _WiFly (WiFly) {
-  //stream (ParsedStream(SpiSerial)) {
-  // TODO: Find out why neither of the following work as expected.
-  //       (The result of `read()` is always -1. )
-  //stream (ParsedStream(_WiFly.uart)) {
-  //stream (ParsedStream(WiFly.uart)) {
-  /*
-   */
-
-  _ip = ip;
-  _port = port;
-  _domain = NULL;
 
   isOpen = false;
 }
 
 
-WiFlyClient::WiFlyClient(const char* domain, uint16_t port) :
-  _WiFly (WiFly)  {
-  //stream (ParsedStream(SpiSerial)) {
-  // TODO: Find out why neither of the following work as expected.
-  //       (The result of `read()` is always -1. )
-  //stream (ParsedStream(_WiFly.uart)) {
-  //stream (ParsedStream(WiFly.uart)) {
-  /*
-   */
-  _ip = NULL;
-  _port = port;
-  _domain = domain;
-
-  isOpen = false;
-}
-
-
-size_t  WiFlyClient::write(byte value) {
+size_t  WiFlyClient::write(uint8_t value) {
   /*
    */
   _WiFly.uart->write(value);
@@ -45,16 +17,36 @@ size_t  WiFlyClient::write(byte value) {
 }
 
 
-size_t  WiFlyClient::write(const uint8_t *buffer, size_t size) {
+size_t  WiFlyClient::write(const uint8_t *buf, size_t size) {
   /*
    */
 	while(size--)
-		_WiFly.uart->write(*buffer++);
+		_WiFly.uart->write(*buf++);
 	return size;
 }
 
+int WiFlyClient::connect(IPAddress ip, uint16_t port){
+    /*
+     */
+    
+    _ip = rawIPAddress(ip);
+    _port = port;
+    _domain = NULL;
 
-boolean WiFlyClient::connect() {
+    return _connect();
+}
+
+int WiFlyClient::connect(const char *host, uint16_t port){
+    /*
+     */
+    _ip = NULL;
+    _port = port;
+    _domain = host;
+
+    return _connect();
+}
+
+boolean WiFlyClient::_connect() {
   /*
    */
 
@@ -127,6 +119,16 @@ int WiFlyClient::read() {
   return stream.read();
 }
 
+int WiFlyClient::read(uint8_t *buf, size_t size){
+    /*
+     */
+    if (!isOpen) {
+        return -1;
+    }
+    // ***LWK*** TODO make this work
+    return stream.read();
+}
+
 int WiFlyClient::peek() {
   if (!isOpen) {
     return -1;
@@ -147,7 +149,7 @@ void WiFlyClient::flush(void) {
 }
 
 
-bool WiFlyClient::connected() {
+uint8_t WiFlyClient::connected() {
   /*
    */
   // TODO: Set isOpen to false once we know the stream is closed?

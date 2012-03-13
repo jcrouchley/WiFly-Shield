@@ -1,5 +1,5 @@
-#ifndef __SERVER_H__
-#define __SERVER_H__
+#ifndef __WIFLY_SERVER_H__
+#define __WIFLY_SERVER_H__
 
 #include <stdint.h>
  
