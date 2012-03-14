@@ -45,7 +45,7 @@ void setup() {
   mySerial.println("Wifly join");
   
   // Join the WiFi network
-  if (!WiFly.join(ssid, passphrase, WEP_MODE)) {
+  if (!WiFly.join(ssid, passphrase, mode)) {
     mySerial.println("Association failed.");
     while (1) {
       // Hang on failure.
