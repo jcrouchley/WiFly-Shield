@@ -1,8 +1,8 @@
 
 // (Based on Ethernet's WebClient Example)
 
-#include "WiFly.h"
-
+#include <SPI.h>
+#include <WiFly.h>
 
 #include "Credentials.h"
 
@@ -15,19 +15,16 @@ WiFlyClient client("google.com", 80);
 
 void setup() {
   
-  Serial.begin(115200);
-  Serial.println("WebClient example at 38400 baud.");
+  Serial.begin(9600);
 
   WiFly.begin();
-
+  
   if (!WiFly.join(ssid, passphrase)) {
     Serial.println("Association failed.");
     while (1) {
       // Hang on failure.
     }
   }  
-
-  WiFly.configure(WIFLY_BAUD, 38400);
 
   Serial.println("connecting...");
 
@@ -41,17 +38,10 @@ void setup() {
   
 }
 
-int count = 0;
-
 void loop() {
   if (client.available()) {
     char c = client.read();
     Serial.print(c);
-    count++;
-    if (count > 80) {
-      count = 0;
-      Serial.println();
-    }
   }
   
   if (!client.connected()) {
